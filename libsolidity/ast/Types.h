@@ -897,7 +897,8 @@ public:
 		Kind _kind = Kind::Internal,
 		bool _arbitraryParameters = false,
 		Declaration const* _declaration = nullptr,
-		bool _isConstant = false,
+		bool _isView = false,
+		bool _isPure = false,
 		bool _isPayable = false,
 		bool _gasSet = false,
 		bool _valueSet = false,
@@ -912,7 +913,8 @@ public:
 		m_gasSet(_gasSet),
 		m_valueSet(_valueSet),
 		m_bound(_bound),
-		m_isConstant(_isConstant),
+		m_isView(_isView),
+		m_isPure(_isPure),
 		m_isPayable(_isPayable),
 		m_declaration(_declaration)
 	{
@@ -975,9 +977,9 @@ public:
 	}
 	bool hasDeclaration() const { return !!m_declaration; }
 	bool isConstant() const { return m_isConstant; }
+	bool isView() const { return m_isView; }
 	/// @returns true if the the result of this function only depends on its arguments
 	/// and it does not modify the state.
-	/// Currently, this will only return true for internal functions like keccak and ecrecover.
 	bool isPure() const;
 	bool isPayable() const { return m_isPayable; }
 	/// @return A shared pointer of an ASTString.
@@ -1017,7 +1019,8 @@ private:
 	bool const m_gasSet = false; ///< true iff the gas value to be used is on the stack
 	bool const m_valueSet = false; ///< true iff the value to be sent is on the stack
 	bool const m_bound = false; ///< true iff the function is called as arg1.fun(arg2, ..., argn)
-	bool m_isConstant = false;
+	bool m_isView = false;
+	bool m_isPure = false;
 	bool m_isPayable = false;
 	Declaration const* m_declaration = nullptr;
 };

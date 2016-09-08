@@ -73,6 +73,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -116,6 +118,8 @@ BOOST_AUTO_TEST_CASE(multiple_methods)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -134,6 +138,8 @@ BOOST_AUTO_TEST_CASE(multiple_methods)
 	{
 		"name": "g",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -166,6 +172,8 @@ BOOST_AUTO_TEST_CASE(multiple_params)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -204,6 +212,8 @@ BOOST_AUTO_TEST_CASE(multiple_methods_order)
 	{
 		"name": "c",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -222,6 +232,8 @@ BOOST_AUTO_TEST_CASE(multiple_methods_order)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure"; false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -255,6 +267,8 @@ BOOST_AUTO_TEST_CASE(const_function)
 	{
 		"name": "foo",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -277,6 +291,8 @@ BOOST_AUTO_TEST_CASE(const_function)
 	{
 		"name": "boo",
 		"constant": true,
+		"view": true,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [{
@@ -308,6 +324,8 @@ BOOST_AUTO_TEST_CASE(events)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -405,6 +423,8 @@ BOOST_AUTO_TEST_CASE(inherited)
 	{
 		"name": "derivedFunction",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs":
@@ -460,6 +480,8 @@ BOOST_AUTO_TEST_CASE(empty_name_input_parameter_with_named_one)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -502,6 +524,8 @@ BOOST_AUTO_TEST_CASE(empty_name_return_parameter)
 	{
 		"name": "f",
 		"constant": false,
+		"view": false,
+		"pure": false,
 		"payable" : false,
 		"type": "function",
 		"inputs": [
@@ -571,6 +595,8 @@ BOOST_AUTO_TEST_CASE(return_param_in_abi)
 	[
 		{
 			"constant" : false,
+			"view": false,
+			"pure": false,
 			"payable" : false,
 			"inputs" : [],
 			"name" : "ret",
@@ -610,6 +636,8 @@ BOOST_AUTO_TEST_CASE(strings_and_arrays)
 	[
 		{
 			"constant" : false,
+			"view": false,
+		        "pure": false,
 			"payable" : false,
 			"name": "f",
 			"inputs": [
@@ -638,6 +666,8 @@ BOOST_AUTO_TEST_CASE(library_function)
 	[
 		{
 			"constant" : false,
+			"view": false,
+			"pure": false,
 			"payable" : false,
 			"name": "f",
 			"inputs": [
@@ -688,6 +718,8 @@ BOOST_AUTO_TEST_CASE(payable_function)
 	[
 		{
 			"constant" : false,
+			"view": false,
+			"pure": false,
 			"payable": false,
 			"inputs": [],
 			"name": "f",
@@ -696,6 +728,8 @@ BOOST_AUTO_TEST_CASE(payable_function)
 		},
 		{
 			"constant" : false,
+			"view": false,
+			"pure": false,
 			"payable": true,
 			"inputs": [],
 			"name": "g",

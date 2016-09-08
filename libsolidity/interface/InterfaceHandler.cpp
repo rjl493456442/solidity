@@ -36,7 +36,10 @@ Json::Value InterfaceHandler::abiInterface(ContractDefinition const& _contractDe
 		Json::Value method;
 		method["type"] = "function";
 		method["name"] = it.second->declaration().name();
-		method["constant"] = it.second->isConstant();
+		// FIXME: constant should be removed at the next breaking release
+		method["constant"] = it.second->isView();
+		method["view"] = it.second->isView();
+		method["pure"] = it.second->isPure();
 		method["payable"] = it.second->isPayable();
 		method["inputs"] = formatTypeList(
 			externalFunctionType->parameterNames(),

@@ -174,7 +174,10 @@ bool ASTJsonConverter::visit(FunctionDefinition const& _node)
 {
 	addJsonNode(_node, "FunctionDefinition", {
 		make_pair("name", _node.name()),
-		make_pair("constant", _node.isDeclaredConst()),
+		// FIXME: remove with next breaking release
+		make_pair("constant", _node.isView()),
+		make_pair("view", _node.isView()),
+		make_pair("pure", _node.isPure()),
 		make_pair("payable", _node.isPayable()),
 		make_pair("visibility", visibility(_node.visibility()))
 	}, true);

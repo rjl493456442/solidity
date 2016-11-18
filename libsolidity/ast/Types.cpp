@@ -2076,13 +2076,15 @@ FunctionType::FunctionType(EventDefinition const& _event):
 
 FunctionType::FunctionType(FunctionTypeName const& _typeName):
 	m_kind(_typeName.visibility() == VariableDeclaration::Visibility::External ? Kind::External : Kind::Internal),
-	m_isConstant(_typeName.isDeclaredConst()),
+	m_isView(_typeName.isView()),
+	m_isPure(_typeName.isPure()),
 	m_isPayable(_typeName.isPayable())
 {
 	if (_typeName.isPayable())
 	{
 		solAssert(m_kind == Kind::External, "Internal payable function type used.");
-		solAssert(!m_isConstant, "Payable constant function");
+		solAssert(!m_isView, "Payable view function");
+		solAssert(!m_isPure, "Payable pure function");
 	}
 	for (auto const& t: _typeName.parameterTypes())
 	{
@@ -2262,8 +2264,6 @@ string FunctionType::toString(bool _short) const
 	for (auto it = m_parameterTypes.begin(); it != m_parameterTypes.end(); ++it)
 		name += (*it)->toString(_short) + (it + 1 == m_parameterTypes.end() ? "" : ",");
 	name += ")";
-	if (m_isConstant)
-		name += " constant";
 	if (m_isView)
 		name += " view";
 	if (m_isPure)

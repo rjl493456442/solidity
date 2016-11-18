@@ -233,9 +233,10 @@ bool ASTJsonConverter::visit(UserDefinedTypeName const& _node)
 bool ASTJsonConverter::visit(FunctionTypeName const& _node)
 {
 	addJsonNode(_node, "FunctionTypeName", {
+		make_pair("view", _node.isView()),
+		make_pair("pure", _node.isPure()),
 		make_pair("payable", _node.isPayable()),
-		make_pair("visibility", visibility(_node.visibility())),
-		make_pair("constant", _node.isDeclaredConst())
+		make_pair("visibility", visibility(_node.visibility()))
 	}, true);
 	return true;
 }

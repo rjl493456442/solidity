@@ -386,9 +386,10 @@ ASTPointer<ASTNode> Parser::parseFunctionDefinitionOrFunctionTypeStateVariable(A
 			c_isConstructor,
 			docstring,
 			header.parameters,
-			header.isDeclaredConst,
 			header.modifiers,
 			header.returnParameters,
+			header.isView,
+			header.isPure,
 			header.isPayable,
 			block
 		);

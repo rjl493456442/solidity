@@ -32,6 +32,7 @@
 #include <libsolidity/analysis/NameAndTypeResolver.h>
 #include <libsolidity/interface/Exceptions.h>
 #include <libsolidity/interface/CompilerStack.h>
+#include <libsolidity/interface/StandardCompiler.h>
 #include <libsolidity/interface/SourceReferenceFormatter.h>
 #include <libsolidity/interface/GasEstimator.h>
 #include <libsolidity/formal/Why3Translator.h>
@@ -102,6 +103,7 @@ static string const g_strSrcMapRuntime = "srcmap-runtime";
 static string const g_strVersion = "version";
 static string const g_stdinFileNameStr = "<stdin>";
 static string const g_strMetadataLiteral = "metadata-literal";
+static string const g_strStandardJSON = "standard-json";
 
 static string const g_argAbi = g_strAbi;
 static string const g_argAddStandard = g_strAddStandard;
@@ -131,6 +133,7 @@ static string const g_argSignatureHashes = g_strSignatureHashes;
 static string const g_argVersion = g_strVersion;
 static string const g_stdinFileName = g_stdinFileNameStr;
 static string const g_argMetadataLiteral = g_strMetadataLiteral;
+static string const g_argStandardJSON = g_strStandardJSON;
 
 /// Possible arguments to for --combined-json
 static set<string> const g_combinedJsonArgs{
@@ -542,7 +545,8 @@ Allowed options)",
 			"Switch to linker mode, ignoring all options apart from --libraries "
 			"and modify binaries in place."
 		)
-		(g_argMetadataLiteral.c_str(), "Store referenced sources are literal data in the metadata output.");
+		(g_argMetadataLiteral.c_str(), "Store referenced sources are literal data in the metadata output.")
+		(g_argStandardJSON.c_str(), "Process standard JSON input / output.");
 	po::options_description outputComponents("Output Components");
 	outputComponents.add_options()
 		(g_argAst.c_str(), "AST of all source files.")
@@ -610,6 +614,21 @@ Allowed options)",
 
 bool CommandLineInterface::processInput()
 {
+	if (m_args.count(g_argStandardJSON))
+	{
+//		string input;
+//		while (!cin.eof())
+//		{
+//			getline(cin, input);
+//		}
+		string input = R"({ "language": "Solidity", "sources": { "mortal": { "keccak256": "0x234...", "content": "contract owned { address owner; } contract mortal is owned { function kill() { if (msg.sender == owner) selfdestruct(owner); } }" } }, "settings": { "remappings": [ ":g/dir" ], "optimizer": { "enabled": true, "runs": 500 }, "metadata": { "useLiteralContent": true }, "libraries": { "myFile.sol": { "MyLib": "0x123123" } }, "outputSelection": { "*": { "*": [ "metadata", "evm.bytecode" ], "": [ "ast", "why3" ] } } } })";
+		StandardCompiler compiler;
+		string output = compiler.compile(input);
+		cout << "Standard Input JSON: " << input << endl << endl;
+		cout << "Standard Output JSON: " << output << endl;
+		return false;
+	}
+
 	readInputFilesAndConfigureRemappings();
 
 	if (m_args.count(g_argLibraries))

@@ -37,6 +37,7 @@
 #include <libsolidity/analysis/SyntaxChecker.h>
 #include <libsolidity/codegen/Compiler.h>
 #include <libsolidity/interface/InterfaceHandler.h>
+#include <libsolidity/interface/SourceReferenceFormatter.h>
 #include <libsolidity/formal/Why3Translator.h>
 
 #include <libevmasm/Exceptions.h>
@@ -56,4 +57,118 @@ using namespace dev::solidity;
 
 string StandardCompiler::compile(string const& _input)
 {
+	Json::Value input;
+	if (!Json::Reader().parse(_input, input, false))
+	{
+		return "{\"errors\":\"[{\"type\":\"InputError\",\"component\":\"general\",\"severity\":\"error\",\"message\":\"Error parsing input JSON.\"}]}";
+	}
+//	return jsonCompactPrint(compile(input));
+	cout << "Input: " << input.toStyledString() << endl;
+	Json::Value output = compile(input);
+	cout << "Output: " << output.toStyledString() << endl;
+	return jsonCompactPrint(output);
+}
+
+Json::Value StandardCompiler::compile(Json::Value const& _input)
+{
+	m_compilerStack.reset(false);
+
+	Json::Value const& sources = _input["sources"];
+	if (!sources)
+	{
+		// @TOOD report error
+		return Json::Value();
+	}
+
+	for (auto const& sourceName: sources.getMemberNames())
+		m_compilerStack.addSource(sourceName, sources[sourceName]["content"].asString());
+
+	// @TODO parse settings
+	bool optimize = false;
+	unsigned optimizeRuns = 200;
+	map<string, h160> libraries;
+
+	auto scannerFromSourceName = [&](string const& _sourceName) -> solidity::Scanner const& { return m_compilerStack.scanner(_sourceName); };
+
+	try
+	{
+		// @TODO check return value and parse errors
+		m_compilerStack.compile(optimize, optimizeRuns, libraries);
+	}
+	catch (Error const& _error)
+	{
+		if (_error.type() == Error::Type::DocstringParsingError)
+			cerr << "Documentation parsing error: " << *boost::get_error_info<errinfo_comment>(_error) << endl;
+		else
+			SourceReferenceFormatter::printExceptionInformation(cerr, _error, _error.typeName(), scannerFromSourceName);
+
+		return Json::Value();
+	}
+	catch (CompilerError const& _exception)
+	{
+		SourceReferenceFormatter::printExceptionInformation(cerr, _exception, "Compiler error", scannerFromSourceName);
+		return Json::Value();
+	}
+	catch (InternalCompilerError const& _exception)
+	{
+		cerr << "Internal compiler error during compilation:" << endl
+			<< boost::diagnostic_information(_exception);
+		return Json::Value();
+	}
+	catch (UnimplementedFeatureError const& _exception)
+	{
+		cerr << "Unimplemented feature:" << endl
+			<< boost::diagnostic_information(_exception);
+		return Json::Value();
+	}
+	catch (Exception const& _exception)
+	{
+		cerr << "Exception during compilation: " << boost::diagnostic_information(_exception) << endl;
+		return Json::Value();
+	}
+	catch (...)
+	{
+		cerr << "Unknown exception during compilation." << endl;
+		return Json::Value();
+	}
+
+	Json::Value output = Json::objectValue;
+
+	vector<string> contracts = m_compilerStack.contractNames();
+	if (contracts.empty())
+	{
+		// @TOOD report error
+		return Json::Value();
+	}
+
+	output["contracts"] = Json::objectValue;
+	output["contracts"][""] = Json::objectValue;
+
+	Json::Value contractsOutput = Json::objectValue;
+	for (string const& contractName: contracts)
+	{
+		Json::Value contractData(Json::objectValue);
+		contractData["abi"] = dev::jsonCompactPrint(m_compilerStack.interface(contractName));
+		contractData["metadata"] = m_compilerStack.onChainMetadata(contractName);
+
+		Json::Value evmData(Json::objectValue);
+		evmData["bytecode"] = m_compilerStack.object(contractName).toHex();
+		evmData["runtimebytecode"] = m_compilerStack.runtimeObject(contractName).toHex();
+		evmData["clone"] = m_compilerStack.cloneObject(contractName).toHex();
+		evmData["opcodes"] = solidity::disassemble(m_compilerStack.object(contractName).bytecode);
+//		ostringstream unused;
+//		contractData["assembly"] = m_compilerStack.streamAssembly(unused, contractName, _sources, true);
+		auto sourceMap = m_compilerStack.sourceMapping(contractName);
+		evmData["srcmap"] = sourceMap ? *sourceMap : "";
+		auto runtimeSourceMap = m_compilerStack.runtimeSourceMapping(contractName);
+		evmData["srcmapruntime"] = runtimeSourceMap ? *runtimeSourceMap : "";
+		contractData["evm"] = evmData;
+		contractData["devdoc"] = dev::jsonCompactPrint(m_compilerStack.metadata(contractName, DocumentationType::NatspecDev));
+		contractData["userdoc"] = dev::jsonCompactPrint(m_compilerStack.metadata(contractName, DocumentationType::NatspecUser));
+
+		contractsOutput[contractName] = contractData;
+	}
+	output["contracts"][""] = contractsOutput;
+
+	return output;
 }

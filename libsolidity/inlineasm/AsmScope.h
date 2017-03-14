@@ -115,6 +115,7 @@ struct Scope
 	/// @returns true if the name exists in this scope or in super scopes (also searches
 	/// across function and assembly boundaries).
 	bool exists(std::string const& _name);
+
 	Scope* superScope = nullptr;
 	/// If true, variables from the super scope are not visible here (other identifiers are),
 	/// but they are still taken into account to prevent shadowing.

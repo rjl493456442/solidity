@@ -115,11 +115,6 @@ bool AsmAnalyzer::operator()(FunctionalInstruction const& _instr)
 	return success;
 }
 
-bool AsmAnalyzer::operator()(Label const&)
-{
-	return true;
-}
-
 bool AsmAnalyzer::operator()(assembly::Assignment const& _assignment)
 {
 	return checkAssignment(_assignment.variableName);

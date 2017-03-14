@@ -67,7 +67,7 @@ public:
 	bool operator()(assembly::Literal const& _literal);
 	bool operator()(assembly::Identifier const&);
 	bool operator()(assembly::FunctionalInstruction const& _functionalInstruction);
-	bool operator()(assembly::Label const& _label);
+	bool operator()(assembly::Label const&) { return true; }
 	bool operator()(assembly::Assignment const&);
 	bool operator()(assembly::FunctionalAssignment const& _functionalAssignment);
 	bool operator()(assembly::VariableDeclaration const& _variableDeclaration);

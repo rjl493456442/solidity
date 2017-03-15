@@ -34,6 +34,10 @@ branches:
 os: Visual Studio 2015
 configuration:
     - RelWithDebInfo
+environment:
+  # This is used for pushing to solidity-test-bytecodes
+  access_token:
+    secure: 6ttA7WE0CPS+Qo026OI/oMn+QYHmRegId4nJU42EnLaFw0f+4ks4aVRavFrLPjOF
 # NB: Appveyor cache is disabled, because it is proving very unreliable.
 # We can re-enable it when we find a way to mitigate the unreliability
 # issues.  Have automated builds be reliable is the more important thing.
@@ -54,6 +58,7 @@ build_script:
     - msbuild solidity.sln /p:Configuration=%CONFIGURATION% /m:%NUMBER_OF_PROCESSORS% /v:minimal
     - cd %APPVEYOR_BUILD_FOLDER%
     - scripts\release.bat %CONFIGURATION%
+    - scripts\bytecodecompare\storebytecode.bat
 
 test_script:
     - cd %APPVEYOR_BUILD_FOLDER%

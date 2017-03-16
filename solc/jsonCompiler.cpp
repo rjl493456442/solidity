@@ -36,6 +36,7 @@
 #include <libsolidity/analysis/NameAndTypeResolver.h>
 #include <libsolidity/interface/Exceptions.h>
 #include <libsolidity/interface/CompilerStack.h>
+#include <libsolidity/interface/StandardCompiler.h>
 #include <libsolidity/interface/SourceReferenceFormatter.h>
 #include <libsolidity/ast/ASTJsonConverter.h>
 #include <libsolidity/interface/Version.h>
@@ -314,6 +315,43 @@ string compileSingle(string const& _input, bool _optimize)
 	return compile(sources, _optimize, nullptr);
 }
 
+string compileStandardInternal(string const& _input, CStyleReadFileCallback _readCallback = nullptr)
+{
+	StandardCompiler::ReadFileCallback readCallback;
+	if (_readCallback)
+	{
+		readCallback = [=](string const& _path)
+		{
+			char* contents_c = nullptr;
+			char* error_c = nullptr;
+			_readCallback(_path.c_str(), &contents_c, &error_c);
+			StandardCompiler::ReadFileResult result;
+			result.success = true;
+			if (!contents_c && !error_c)
+			{
+				result.success = false;
+				result.contentsOrErrorMessage = "File not found.";
+			}
+			if (contents_c)
+			{
+				result.success = true;
+				result.contentsOrErrorMessage = string(contents_c);
+				free(contents_c);
+			}
+			if (error_c)
+			{
+				result.success = false;
+				result.contentsOrErrorMessage = string(error_c);
+				free(error_c);
+			}
+			return result;
+		};
+	}
+
+	StandardCompiler compiler(readCallback);
+	return compiler.compile(_input);
+}
+
 static string s_outputBuffer;
 
 extern "C"
@@ -335,6 +373,11 @@ extern char const* compileJSONMulti(char const* _input, bool _optimize)
 extern char const* compileJSONCallback(char const* _input, bool _optimize, CStyleReadFileCallback _readCallback)
 {
 	s_outputBuffer = compileMulti(_input, _optimize, _readCallback);
+	return s_outputBuffer.c_str();
+}
+extern char const* compileStandard(char const* _input, CStyleReadFileCallback _readCallback)
+{
+	s_outputBuffer = compileStandardInternal(_input, _readCallback);
 	return s_outputBuffer.c_str();
 }
 }

@@ -13,7 +13,7 @@ for f in sorted(glob.glob("*.sol")):
     (out, err) = proc.communicate()
     try:
         result = json.loads(out.strip())
-        for contractName in result['contracts'].keys():
+        for contractName in sorted(result['contracts'].keys()):
             report.write(contractName + ' ' + result['contracts'][contractName]['bin'] + '\n')
     except:
         report.write(f + ": ERROR\n")

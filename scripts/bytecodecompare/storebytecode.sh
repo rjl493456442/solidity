@@ -73,14 +73,7 @@ EOF
         chmod +x solc
         ./solc *.sol > report.txt
     else
-        for f in *.sol
-        do
-            # Run solc and feed it into a very crude json "parser"
-            $REPO_ROOT/build/solc/solc --combined-json bin "$f" 2>/dev/null | \
-                sed -e 's/}/\n/g' | grep '"bin"' | \
-                sed -e 's/.*"\([^"]*\)":{"bin":"\([^"]*\)".*/\1 \2/' \
-                >> report.txt
-        done
+        $REPO_ROOT/scripts/bytecodecompare/prepare_report.py $REPO_ROOT/build/solc/solc
     fi
 
     openssl aes-256-cbc -K $encrypted_60701c962b9c_key -iv $encrypted_60701c962b9c_iv -in "$REPO_ROOT"/scripts/bytecodecompare/deploy_key.enc -out deploy_key -d

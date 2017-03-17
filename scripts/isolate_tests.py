@@ -8,7 +8,8 @@
 
 import sys
 import re
-
+import os
+from os.path import join
 
 def extract_cases(path):
     lines = open(path).read().splitlines()
@@ -39,10 +40,11 @@ def write_cases(tests, start=0):
 
 
 if __name__ == '__main__':
-    files = sys.argv[1:]
+    path = sys.argv[1]
 
     i = 0
-    for path in files:
-        cases = extract_cases(path)
-        write_cases(cases, start=i)
-        i += len(cases)
+    for root, dir, files in os.walk(path):
+        for f in files:
+            cases = extract_cases(join(root, f))
+            write_cases(cases, start=i)
+            i += len(cases)

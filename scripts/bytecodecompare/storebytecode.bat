@@ -24,7 +24,7 @@ set COMMIT=%2
 
 mkdir bytecode
 cd bytecode
-..\scripts\isolate_tests.py ..\test\contracts\* ..\test\libsolidity\*EndToEnd*
+..\scripts\isolate_tests.py ..\test\
 ..\scripts\bytecodecompare\prepare_report.py ..\build\solc\%CONFIGURATION%\solc.exe
 
 git clone --depth 2 git@github.com:ethereum/solidity-test-bytecode.git

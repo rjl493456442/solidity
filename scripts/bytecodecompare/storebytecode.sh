@@ -36,7 +36,7 @@ TMPDIR=$(mktemp -d)
     REPO_ROOT=$(pwd) # make it absolute
     cd "$TMPDIR"
 
-    "$REPO_ROOT"/scripts/isolate_tests.py "$REPO_ROOT"/test/contracts/* "$REPO_ROOT"/test/libsolidity/*EndToEnd*
+    "$REPO_ROOT"/scripts/isolate_tests.py "$REPO_ROOT"/test/
 
     if [[ "$SOLC_EMSCRIPTEN" = "On" ]]
     then

@@ -9,10 +9,11 @@
 import sys
 import re
 import os
+import hashlib
 from os.path import join
 
 def extract_cases(path):
-    lines = open(path).read().splitlines()
+    lines = open(path, 'rb').read().splitlines()
 
     inside = False
     delimiter = ''
@@ -34,17 +35,15 @@ def extract_cases(path):
     return tests
 
 
-def write_cases(tests, start=0):
-    for i, test in enumerate(tests, start=start):
-        open('test%d.sol' % i, 'w').write(test)
+def write_cases(tests):
+    for test in tests:
+        open('test_%s.sol' % hashlib.sha256(test).hexdigest(), 'w').write(test)
 
 
 if __name__ == '__main__':
     path = sys.argv[1]
 
-    i = 0
     for root, dir, files in os.walk(path):
         for f in files:
             cases = extract_cases(join(root, f))
-            write_cases(cases, start=i)
-            i += len(cases)
+            write_cases(cases)

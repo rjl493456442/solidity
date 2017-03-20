@@ -65,6 +65,7 @@ for (var filename of process.argv.slice(2))
             for (var contractName in result['contracts'])
             {
                 console.log(contractName + ' ' + result['contracts'][contractName].bytecode)
+                console.log(contractName + ' ' + result['contracts'][contractName].metadata)
             }
         }
     }

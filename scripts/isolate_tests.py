@@ -39,7 +39,6 @@ def write_cases(tests):
     for test in tests:
         open('test_%s.sol' % hashlib.sha256(test).hexdigest(), 'w').write(test)
 
-
 if __name__ == '__main__':
     path = sys.argv[1]
 

@@ -56,7 +56,7 @@ for (var filename of process.argv.slice(2))
         var inputs = {}
         inputs[filename] = fs.readFileSync(filename).toString()
         var result = compiler.compile({sources: inputs})
-        if (!'contracts' in result)
+        if (!('contracts' in result))
         {
             console.log(filenname + ': ERROR')
         }

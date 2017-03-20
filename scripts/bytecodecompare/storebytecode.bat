@@ -27,7 +27,7 @@ cd bytecode
 ..\scripts\isolate_tests.py ..\test\
 ..\scripts\bytecodecompare\prepare_report.py ..\build\solc\%CONFIGURATION%\solc.exe
 
-git clone --depth 2 https://chriseth@github.com/ethereum/solidity-test-bytecode.git
+git clone --depth 2 git@github.com:ethereum/solidity-test-bytecode.git
 cd solidity-test-bytecode
 git config user.name "travis"
 git config user.email "chris@ethereum.org"

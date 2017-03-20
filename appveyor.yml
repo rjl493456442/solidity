@@ -36,8 +36,8 @@ configuration:
     - RelWithDebInfo
 environment:
   # This is used for pushing to solidity-test-bytecodes
-  access_token:
-    secure: 6ttA7WE0CPS+Qo026OI/oMn+QYHmRegId4nJU42EnLaFw0f+4ks4aVRavFrLPjOF
+  gitkey:
+    secure: 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
 # NB: Appveyor cache is disabled, because it is proving very unreliable.
 # We can re-enable it when we find a way to mitigate the unreliability
 # issues.  Have automated builds be reliable is the more important thing.
@@ -50,6 +50,12 @@ install:
     - git submodule update --init --recursive
     - scripts/install_deps.bat
     - set ETHEREUM_DEPS_PATH=%APPVEYOR_BUILD_FOLDER%\deps\install
+    # extract the deploy key, adding proper newlines
+    - ps: $key = $env:gitkey
+    - ps: $fileContent = "-----BEGIN RSA PRIVATE KEY-----" + "`n" 
+    - ps: for ($i = 0; $i -lt $key.Length / 64; $i++) { $min = [math]::min(64, $key.Length - ($i * 64)); $fileContent += $key.substring($i*64, $min) + "`n"; } 
+    - ps: $fileContent += "-----END RSA PRIVATE KEY-----" + "`n" 
+    - ps: Set-Content c:\users\appveyor\.ssh\id_rsa $fileContent
 before_build:
     - if not exist build mkdir build
     - cd build
@@ -58,8 +64,6 @@ build_script:
     - msbuild solidity.sln /p:Configuration=%CONFIGURATION% /m:%NUMBER_OF_PROCESSORS% /v:minimal
     - cd %APPVEYOR_BUILD_FOLDER%
     - scripts\release.bat %CONFIGURATION%
-    - git config --global credential.helper store
-    - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
     - scripts\bytecodecompare\storebytecode.bat %CONFIGURATION% %APPVEYOR_REPO_COMMIT%
 
 test_script:

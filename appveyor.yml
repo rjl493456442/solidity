@@ -53,7 +53,7 @@ install:
     - ps: Set-Content c:\users\appveyor\.ssh\id_rsa $fileContent
     - git submodule update --init --recursive
     - ps: $prerelease = "nightly."
-    - ps: $prerelease += Get-Date -format "%YYYY.%MM.%DD"
+    - ps: $prerelease += Get-Date -format "yyyy.M.d"
     - ps: Set-Content prerelease.txt $prerelease
     - scripts/install_deps.bat
     - set ETHEREUM_DEPS_PATH=%APPVEYOR_BUILD_FOLDER%\deps\install
